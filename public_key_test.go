@@ -2,13 +2,13 @@ package tpke
 
 import (
 	"crypto/rand"
-	"github.com/DE-labtory/tpke/bls"
+	"github.com/WangZhuo2000/tpke/bls"
 	"testing"
 )
 
 func TestPublicKey_Serialize(t *testing.T) {
 	g1, _ := bls.RandG1(rand.Reader)
-	pubKey := &PublicKey {
+	pubKey := &PublicKey{
 		G1: g1,
 	}
 
@@ -24,7 +24,7 @@ func TestPublicKey_Serialize(t *testing.T) {
 func TestPublicKeySet_Serialize(t *testing.T) {
 	poly := randomPoly(10)
 	commit := poly.commitment()
-	pks := &PublicKeySet {
+	pks := &PublicKeySet{
 		commitment: commit,
 	}
 	serial := pks.Serialize()

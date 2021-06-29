@@ -4,7 +4,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/binary"
-	"github.com/DE-labtory/tpke/bls"
+	"github.com/WangZhuo2000/tpke/bls"
 	"github.com/leesper/go_rng"
 	"math/big"
 	"testing"
@@ -12,7 +12,7 @@ import (
 
 type playGround struct {
 	actors []*actor
-	pkSet *PublicKeySet
+	pkSet  *PublicKeySet
 }
 
 func (pg *playGround) publishPubKey() *PublicKey {
@@ -20,8 +20,8 @@ func (pg *playGround) publishPubKey() *PublicKey {
 }
 
 func (pg *playGround) startDecMeeting() *decryptionMeeting {
-	return &decryptionMeeting {
-		pkSet: *pg.pkSet.Clone(),
+	return &decryptionMeeting{
+		pkSet:      *pg.pkSet.Clone(),
 		cipherText: nil,
 
 		decShares: make(map[int]*DecryptionShare),
@@ -29,16 +29,16 @@ func (pg *playGround) startDecMeeting() *decryptionMeeting {
 }
 
 type actor struct {
-	id int
-	skShare *SecretKeyShare
-	pkShare *PublicKeyShare
+	id          int
+	skShare     *SecretKeyShare
+	pkShare     *PublicKeyShare
 	receivedMsg *CipherText
 }
 
 type decryptionMeeting struct {
-	pkSet PublicKeySet
+	pkSet      PublicKeySet
 	cipherText *CipherText
-	decShares map[int]*DecryptionShare
+	decShares  map[int]*DecryptionShare
 }
 
 func (dm *decryptionMeeting) acceptDecShare(a *actor) {
@@ -66,15 +66,15 @@ func setUp(t *testing.T) *playGround {
 	i := 0
 	for i < people {
 		actors = append(actors, &actor{
-			id: i,
+			id:      i,
 			skShare: secretKeySet.KeyShare(i),
 			pkShare: publicKeySet.KeyShare(i),
 		})
 		i++
 	}
-	return &playGround {
+	return &playGround{
 		actors: actors,
-		pkSet: publicKeySet,
+		pkSet:  publicKeySet,
 	}
 }
 
@@ -150,9 +150,9 @@ func TestInterpolate(t *testing.T) {
 		comm := randomPoly(deg[i]).commitment()
 		x := 1
 		for j := 0; j <= deg[i]; j++ {
-			x += int(rng.Int32()) % 5 + 1
+			x += int(rng.Int32())%5 + 1
 			xFR := bls.FRReprToFR(bls.NewFRRepr(uint64(x)))
-			sample := &Sample {
+			sample := &Sample{
 				fr: bls.FRReprToFR(bls.NewFRRepr(uint64(x))),
 				g1: comm.evaluate(*xFR),
 			}
@@ -185,7 +185,7 @@ func randomSecretKey(n int) *SecretKey {
 
 	//frRepr := &bls.FRRepr{3140105163220197741, 15199066853698796999, 617359497624618578, 6843342860022209944}
 
-	return &SecretKey {
+	return &SecretKey{
 		FR: fr,
 	}
 
@@ -215,7 +215,7 @@ func TestSimpleSig(t *testing.T) {
 		FR: k,
 	}
 
-	pk0 := &PublicKey {
+	pk0 := &PublicKey{
 		G1: bls.G1AffineOne.MulFR(sk0.FR.ToRepr()),
 	}
 	msg0 := []byte("hello world")
@@ -325,11 +325,11 @@ func TestCipherText_Serialize(t *testing.T) {
 	randU, _ := bls.RandG1(rand.Reader)
 	randW, _ := bls.RandG2(rand.Reader)
 	randV := make([]byte, 10)
-	for i:=0; i<10; i++ {
+	for i := 0; i < 10; i++ {
 		randV[i] = byte(i)
 	}
 
-	cipher := &CipherText {
+	cipher := &CipherText{
 		U: *randU,
 		V: randV,
 		W: *randW,

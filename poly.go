@@ -1,8 +1,8 @@
 package tpke
 
 import (
+	"github.com/WangZhuo2000/tpke/bls"
 	"github.com/leesper/go_rng"
-	"github.com/DE-labtory/tpke/bls"
 	"math/rand"
 	"time"
 )
@@ -18,10 +18,10 @@ func randomPoly(degree int) *Poly {
 	uRng := rng.NewUniformGenerator(int64(r1.Int()))
 
 	for i := range coeff {
-		fr:= bls.NewFRRepr(uint64(uRng.Int64()))
+		fr := bls.NewFRRepr(uint64(uRng.Int64()))
 		coeff[i] = bls.FRReprToFR(fr)
 	}
-	return &Poly {
+	return &Poly{
 		coeff: coeff,
 	}
 }
@@ -30,7 +30,7 @@ func (p *Poly) evaluate(x bls.FR) *bls.FR {
 	i := len(p.coeff) - 1
 	result := p.coeff[i].Copy()
 	for i >= 0 {
-		if i != len(p.coeff) - 1 {
+		if i != len(p.coeff)-1 {
 			result.MulAssign(&x)
 			result.AddAssign(p.coeff[i])
 		}
@@ -69,7 +69,7 @@ func (p *Poly) commitment() *Commitment {
 	for i := range coeff {
 		coeff[i] = g1One.MulFR(p.coeff[i].ToRepr())
 	}
-	return &Commitment {
+	return &Commitment{
 		coeff: coeff,
 	}
 }
@@ -83,7 +83,7 @@ func (c *Commitment) Clone() *Commitment {
 	for i := range coeff {
 		coeff[i] = c.coeff[i].Copy()
 	}
-	return &Commitment {
+	return &Commitment{
 		coeff: coeff,
 	}
 }
@@ -99,7 +99,7 @@ func (c *Commitment) evaluate(x bls.FR) *bls.G1Projective {
 	i := len(c.coeff) - 1
 	result := c.coeff[i]
 	for i >= 0 {
-		if i != len(c.coeff) - 1{
+		if i != len(c.coeff)-1 {
 			result = result.MulFR(x.ToRepr())
 			result = result.Add(c.coeff[i])
 		}

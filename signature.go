@@ -1,6 +1,6 @@
 package tpke
 
-import "github.com/DE-labtory/tpke/bls"
+import "github.com/WangZhuo2000/tpke/bls"
 
 type Signature struct {
 	G2 *bls.G2Projective

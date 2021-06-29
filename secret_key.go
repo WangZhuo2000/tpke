@@ -2,7 +2,7 @@ package tpke
 
 import (
 	"errors"
-	"github.com/DE-labtory/tpke/bls"
+	"github.com/WangZhuo2000/tpke/bls"
 )
 
 type SecretKey struct {
@@ -10,14 +10,14 @@ type SecretKey struct {
 }
 
 func (s *SecretKey) PublicKey() *PublicKey {
-	return &PublicKey {
+	return &PublicKey{
 		G1: bls.G1AffineOne.MulFR(s.FR.ToRepr()),
 	}
 }
 
 func (s *SecretKey) Sign(msg []byte) *Signature {
 	g2Hash := HashG2(msg).ToAffine()
-	return &Signature {
+	return &Signature{
 		G2: g2Hash.MulFR(s.FR.ToRepr()),
 	}
 }
@@ -38,7 +38,7 @@ func (s *SecretKey) Serialize() [32]byte {
 
 func NewSecretKeyFromBytes(bytes [32]byte) *SecretKey {
 	frRepr := bls.FRReprFromBytes(bytes)
-	return &SecretKey {
+	return &SecretKey{
 		FR: bls.FRReprToFR(frRepr),
 	}
 }
@@ -60,13 +60,13 @@ func RandomSecretKeySet(threshold int) *SecretKeySet {
 
 func NewSecretKeySetFromBytes(bytes []byte) (*SecretKeySet, error) {
 	l := len(bytes)
-	if l % 32 != 0 {
+	if l%32 != 0 {
 		return nil, errors.New("length of byte must be a multiple of 32")
 	}
 
 	frs := make([]*bls.FR, 0)
 	idx := 0
-	for i := 0; i < l / 32; i++ {
+	for i := 0; i < l/32; i++ {
 		var b [32]byte
 		for j := 0; j < 32; j++ {
 			b[j] = bytes[idx]
@@ -76,8 +76,8 @@ func NewSecretKeySetFromBytes(bytes []byte) (*SecretKeySet, error) {
 		frs = append(frs, bls.FRReprToFR(fr))
 	}
 
-	return &SecretKeySet {
-		poly: Poly {
+	return &SecretKeySet{
+		poly: Poly{
 			coeff: frs,
 		},
 	}, nil
@@ -110,8 +110,8 @@ func (sks *SecretKeySet) KeyShare(i int) *SecretKeyShare {
 	x := bls.FRReprToFR(bls.NewFRRepr(uint64(i)))
 	fr.AddAssign(x)
 	eval := sks.poly.evaluate(*fr)
-	return &SecretKeyShare {
-		sk: &SecretKey {
+	return &SecretKeyShare{
+		sk: &SecretKey{
 			FR: eval,
 		},
 	}
@@ -123,14 +123,14 @@ func (sks *SecretKeySet) KeyShareUsingString(s string) *SecretKeyShare {
 	x := bls.FRReprToFR(frRepr)
 	fr.AddAssign(x)
 	eval := sks.poly.evaluate(*fr)
-	return &SecretKeyShare {
-		sk: &SecretKey {
+	return &SecretKeyShare{
+		sk: &SecretKey{
 			FR: eval,
 		},
 	}
 }
 
-func (sks *SecretKeySet) Equals (other *SecretKeySet) bool {
+func (sks *SecretKeySet) Equals(other *SecretKeySet) bool {
 	if len(sks.poly.coeff) != len(other.poly.coeff) {
 		return false
 	}
@@ -149,14 +149,14 @@ type SecretKeyShare struct {
 }
 
 func NewSecretKeyShare(sk *SecretKey) *SecretKeyShare {
-	return &SecretKeyShare {
+	return &SecretKeyShare{
 		sk: sk,
 	}
 }
 
 func (sks *SecretKeyShare) DecryptShare(ct *CipherText) *DecryptionShare {
 	// TODO : verify
-	return &DecryptionShare {
+	return &DecryptionShare{
 		G1: ct.U.ToAffine().MulFR(sks.sk.FR.ToRepr()).Copy(),
 	}
 }
@@ -170,7 +170,7 @@ func (sks *SecretKeyShare) Serialize() [32]byte {
 }
 
 func NewSecretKeyShareFromBytes(bytes [32]byte) *SecretKeyShare {
-	return &SecretKeyShare {
+	return &SecretKeyShare{
 		sk: NewSecretKeyFromBytes(bytes),
 	}
 }

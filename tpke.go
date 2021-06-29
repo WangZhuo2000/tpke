@@ -2,7 +2,7 @@ package tpke
 
 import (
 	"fmt"
-	"github.com/DE-labtory/tpke/bls"
+	"github.com/WangZhuo2000/tpke/bls"
 )
 
 type CipherText struct {
@@ -27,13 +27,13 @@ func (c *CipherText) Serialize() []byte {
 	ret := make([]byte, 0)
 	uSerial := c.U.ToAffine().SerializeBytes()
 	wSerial := c.W.ToAffine().SerializeBytes()
-	for i:=0; i<len(uSerial); i++ {
+	for i := 0; i < len(uSerial); i++ {
 		ret = append(ret, uSerial[i])
 	}
-	for i:=0; i<len(wSerial); i++ {
+	for i := 0; i < len(wSerial); i++ {
 		ret = append(ret, wSerial[i])
 	}
-	for i:=0; i<len(c.V); i++ {
+	for i := 0; i < len(c.V); i++ {
 		ret = append(ret, c.V[i])
 	}
 	return ret
@@ -46,11 +46,11 @@ func NewCipherTextFromBytes(bytes []byte) *CipherText {
 
 	var uX [48]byte
 	var uY [48]byte
-	for i:=0; i<48; i++ {
+	for i := 0; i < 48; i++ {
 		uX[i] = uSerial[i]
 	}
-	for i:=0; i<48; i++ {
-		uY[i] = uSerial[i + 48]
+	for i := 0; i < 48; i++ {
+		uY[i] = uSerial[i+48]
 	}
 	uXfq := bls.FQReprToFQ(bls.FQReprFromBytes(uX))
 	uYfq := bls.FQReprToFQ(bls.FQReprFromBytes(uY))
@@ -60,16 +60,16 @@ func NewCipherTextFromBytes(bytes []byte) *CipherText {
 	var wXc1 [48]byte
 	var wYc0 [48]byte
 	var wYc1 [48]byte
-	for i:=0; i<48; i++ {
+	for i := 0; i < 48; i++ {
 		wXc0[i] = wSerial[i]
 	}
-	for i:=0; i<48; i++ {
+	for i := 0; i < 48; i++ {
 		wXc1[i] = wSerial[i+48]
 	}
-	for i:=0; i<48; i++ {
+	for i := 0; i < 48; i++ {
 		wYc0[i] = wSerial[i+96]
 	}
-	for i:=0; i<48; i++ {
+	for i := 0; i < 48; i++ {
 		wYc1[i] = wSerial[i+144]
 	}
 	wXc0fq := bls.FQReprToFQ(bls.FQReprFromBytes(wXc0))
@@ -82,7 +82,7 @@ func NewCipherTextFromBytes(bytes []byte) *CipherText {
 
 	w := bls.NewG2Affine(wXfq2, wYfq2).ToProjective()
 
-	return &CipherText {
+	return &CipherText{
 		U: *u,
 		V: vSerial,
 		W: *w,
@@ -95,7 +95,7 @@ func (c *CipherText) Clone() *CipherText {
 		cloneV[i] = c.V[i]
 	}
 
-	return &CipherText {
+	return &CipherText{
 		U: *c.U.Copy(),
 		V: cloneV,
 		W: *c.W.Copy(),
@@ -137,7 +137,7 @@ func (ds *DecryptionShare) Serialize() [96]byte {
 
 func NewDecryptionShareFromBytes(bytes [96]byte) *DecryptionShare {
 	var x, y [48]byte
-	for i :=0; i<48; i++ {
+	for i := 0; i < 48; i++ {
 		x[i] = bytes[i]
 		y[i] = bytes[i+48]
 	}

@@ -4,7 +4,7 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
-	"github.com/DE-labtory/tpke/bls"
+	"github.com/WangZhuo2000/tpke/bls"
 )
 
 type PublicKey struct {

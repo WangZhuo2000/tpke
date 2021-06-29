@@ -3,7 +3,7 @@ package tpke
 import (
 	"encoding/binary"
 	"errors"
-	"github.com/DE-labtory/tpke/bls"
+	"github.com/WangZhuo2000/tpke/bls"
 	"golang.org/x/crypto/blake2b"
 	"golang.org/x/crypto/sha3"
 )
@@ -76,7 +76,7 @@ func xorHash(g1 bls.G1Projective, msg []byte) []byte {
 	hashedG1 := hash.Sum(nil)
 	output := make([]byte, len(msg))
 	for i := range output {
-		output[i] = msg[i] ^ hashedG1[i % 32]
+		output[i] = msg[i] ^ hashedG1[i%32]
 	}
 	return output
 }
@@ -112,7 +112,7 @@ func Interpolate(t int, inputs []*Sample) (*bls.G1Projective, error) {
 	x_prod = append(x_prod, tmp.Copy())
 	i = 1
 	for i <= t {
-		tmp.MulAssign(samples[i - 1].fr.Copy())
+		tmp.MulAssign(samples[i-1].fr.Copy())
 		//x_prod[i] = tmp.Copy()
 		x_prod = append(x_prod, tmp.Copy())
 		i++

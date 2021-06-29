@@ -1,4 +1,6 @@
-module github.com/DE-labtory/tpke
+module github.com/WangZhuo2000/tpke
+
+go 1.15
 
 require (
 	github.com/leesper/go_rng v0.0.0-20190531154944-a612b043e353

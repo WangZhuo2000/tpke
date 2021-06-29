@@ -1,21 +1,21 @@
 package tpke
 
 import (
-	"github.com/DE-labtory/tpke/bls"
+	"github.com/WangZhuo2000/tpke/bls"
 	"testing"
 )
 
 func TestPoly_AddAssign(t *testing.T) {
 	fr1 := bls.FRReprToFR(bls.NewFRRepr(1))
-	poly := &Poly {
-		coeff: []*bls.FR {
+	poly := &Poly{
+		coeff: []*bls.FR{
 			fr1.Copy(),
 			fr1.Copy(),
 			fr1.Copy(),
 		},
 	}
-	poly2 := &Poly {
-		coeff: []*bls.FR {
+	poly2 := &Poly{
+		coeff: []*bls.FR{
 			fr1.Copy(),
 			fr1.Copy(),
 			fr1.Copy(),
@@ -38,7 +38,7 @@ func TestPoly_evaluate(t *testing.T) {
 	frRepr1 := &bls.FRRepr{18254824737299055921, 12301176899088639156, 11044415995378916883, 357667238319585097}
 	frRepr2 := &bls.FRRepr{12824654784770937420, 5378575280977611710, 2705578970549845177, 4801150429553808887}
 	frRepr3 := &bls.FRRepr{4520685442247980328, 10536932062350377723, 4028339353248801528, 1646571793378913296}
-	poly := &Poly {
+	poly := &Poly{
 		[]*bls.FR{
 			bls.FRReprToFR(frRepr1),
 			bls.FRReprToFR(frRepr2),
