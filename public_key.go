@@ -45,9 +45,9 @@ func (p *PublicKey) Encrypt(msg []byte) (*CipherText, error) {
 	affine := hashed
 	w := affine.MulFR(r.ToRepr())
 	return &CipherText{
-		U : *u,
-		V : v,
-		W : *w,
+		U: *u,
+		V: v,
+		W: *w,
 	}, nil
 }
 
@@ -71,12 +71,12 @@ func NewPublicKeyFromBytes(bytes [96]byte) *PublicKey {
 	x := bls.FQReprFromBytes(b)
 
 	for i := range b {
-		b[i] = bytes[i + 48]
+		b[i] = bytes[i+48]
 	}
 	y := bls.FQReprFromBytes(b)
 
 	g1Affine := bls.NewG1Affine(bls.FQReprToFQ(x), bls.FQReprToFQ(y))
-	return &PublicKey {
+	return &PublicKey{
 		G1: g1Affine.ToProjective(),
 	}
 }
@@ -86,7 +86,7 @@ type PublicKeySet struct {
 }
 
 func (pks *PublicKeySet) Clone() *PublicKeySet {
-	return &PublicKeySet {
+	return &PublicKeySet{
 		commitment: pks.commitment.Clone(),
 	}
 }
@@ -100,7 +100,7 @@ func (pks *PublicKeySet) Threshold() int {
 }
 
 func (pks *PublicKeySet) PublicKey() *PublicKey {
-	return &PublicKey {
+	return &PublicKey{
 		G1: pks.commitment.coeff[0],
 	}
 }
@@ -108,8 +108,8 @@ func (pks *PublicKeySet) PublicKey() *PublicKey {
 func (pks *PublicKeySet) KeyShare(i int) *PublicKeyShare {
 	fr := bls.FRReprToFR(bls.NewFRRepr(uint64(i + 1)))
 	eval := pks.commitment.evaluate(*fr)
-	return &PublicKeyShare {
-		pk: &PublicKey {
+	return &PublicKeyShare{
+		pk: &PublicKey{
 			G1: eval,
 		},
 	}
@@ -119,7 +119,7 @@ func (pks *PublicKeySet) Decrypt(ds map[int]*DecryptionShare, ct *CipherText) ([
 	samples := make([]*Sample, 0)
 	i := 0
 	for id, d := range ds {
-		samples = append(samples, &Sample {
+		samples = append(samples, &Sample{
 			fr: bls.FRReprToFR(bls.NewFRRepr(uint64(id + 1))),
 			g1: d.G1.Copy(),
 		})
@@ -142,7 +142,7 @@ func (pks *PublicKeySet) DecryptUsingStringMap(ds map[string]*DecryptionShare, c
 		if err != nil {
 			return nil, err
 		}
-		samples = append(samples, &Sample {
+		samples = append(samples, &Sample{
 			fr: bls.FRReprToFR(fr),
 			g1: d.G1.Copy(),
 		})
@@ -150,7 +150,7 @@ func (pks *PublicKeySet) DecryptUsingStringMap(ds map[string]*DecryptionShare, c
 	}
 
 	g, err := Interpolate(pks.commitment.degree(), samples)
-	fmt.Printf("g: %v\n", g)
+	//fmt.Printf("g: %v\n", g)
 	if err != nil {
 		return nil, err
 	}
@@ -186,12 +186,12 @@ func (pks *PublicKeySet) Serialize() []byte {
 
 func NewPublicKeySetFromBytes(bytes []byte) (*PublicKeySet, error) {
 	l := len(bytes)
-	if l % 96 != 0 {
+	if l%96 != 0 {
 		return nil, errors.New("the length of input must be a multiple of 96")
 	}
 	g1Arr := make([]*bls.G1Projective, 0)
 	idx := 0
-	for i := 0; i < l / 96; i++ {
+	for i := 0; i < l/96; i++ {
 		var xArr [48]byte
 		var yArr [48]byte
 		for j := 0; j < 48; j++ {
@@ -210,8 +210,8 @@ func NewPublicKeySetFromBytes(bytes []byte) (*PublicKeySet, error) {
 		g1 := bls.NewG1Affine(fqX, fqY).ToProjective()
 		g1Arr = append(g1Arr, g1)
 	}
-	return &PublicKeySet {
-		commitment: &Commitment {
+	return &PublicKeySet{
+		commitment: &Commitment{
 			coeff: g1Arr,
 		},
 	}, nil
