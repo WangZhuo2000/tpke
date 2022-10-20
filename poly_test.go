@@ -1,7 +1,7 @@
 package tpke
 
 import (
-	"github.com/WangZhuo2000/tpke/bls"
+	"github.com/wz14/tpke/bls"
 	"testing"
 )
 
