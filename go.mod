@@ -1,4 +1,4 @@
-module github.com/WangZhuo2000/tpke
+module github.com/wz14/tpke
 
 go 1.15
 
