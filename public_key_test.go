@@ -2,7 +2,7 @@ package tpke
 
 import (
 	"crypto/rand"
-	"github.com/WangZhuo2000/tpke/bls"
+	"github.com/wz14/tpke/bls"
 	"testing"
 )
 
